@@ -7,7 +7,7 @@ Install required python modules.
 
 ```
 pip install beautifulsoup4
-pip install cairosvg
+pip install svglib
 ```
 
 Run grass-photo.py

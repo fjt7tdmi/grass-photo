@@ -36,5 +36,6 @@ WE WILL NOT TAKE RESPONSIBILITY FOR ANY LOSS OR DAMAGE.
 ## GitHub secrets
 You need to set the following GitHub secrets.
 
-| GitHub secret name | Description |
-| GITHUB_USER_ID | Your GitHub id. This ID is used to access to GitHub and make a grass image. |
+| GitHub secret name    | Description                                                                 |
+| --------------------- | --------------------------------------------------------------------------- |
+| GITHUB_USER_ID        | Your GitHub id. This ID is used to access to GitHub and make a grass image. |

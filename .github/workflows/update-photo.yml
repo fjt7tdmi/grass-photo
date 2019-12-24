@@ -19,7 +19,7 @@ jobs:
         pip install -r requirements.txt
     - name: Make photo
       run: |
-        python make-photo.py
+        python make-photo.py -u ${{ secrets.GITHUB_USER_ID }}
     - name: Upload photo as artifact
       uses: actions/upload-artifact@v1
       with:

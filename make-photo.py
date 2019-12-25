@@ -12,39 +12,56 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import optparse
+import argparse
 import os
 import sys
 import urllib.request
 
 from bs4 import BeautifulSoup
+from bs4 import Tag
 from svglib.svglib import svg2rlg
 from reportlab.graphics import renderPM
 
 def get_github_html(user):
-    url = "https://github.com/" + options.user
+    url = "https://github.com/" + user
     with urllib.request.urlopen(url) as response:
         html = response.read()
         return html
 
-optionParser = optparse.OptionParser()
-optionParser.add_option("-u", dest="user", default=None, help="GitHub user name.")
+def format_svg(svg):
+    svg['xmlns'] = "http://www.w3.org/2000/svg"
+    svg['height'] = 432
+    svg['width'] = 768
 
-(options, args) = optionParser.parse_args()
+    rect = Tag(name='rect')
+    rect['x'] = '0'
+    rect['y'] = '0'
+    rect['width'] = '768'
+    rect['height'] = '432'
+    rect['fill'] = 'gray'
 
-if options.user is None:
+    svg.find("g").insert_before(rect)
+    svg.find("g")["transform"] = "translate(40, 160)"
+    return svg
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-u", dest="user", default=None, help="GitHub user name.")
+
+args = parser.parse_args()
+
+if args.user is None:
     print("ERROR: Specify GitHub user name.")
     sys.exit(1)
 
-html = get_github_html(options.user)
+html = get_github_html(args.user)
 
 soup = BeautifulSoup(html, "html.parser")
-svg = str(soup.find("svg", attrs={"class", "js-calendar-graph-svg"}))
-svg = svg.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"')
+svg = soup.find("svg", attrs={"class", "js-calendar-graph-svg"})
+svg = format_svg(svg)
 
 os.makedirs("work", exist_ok=True)
 with open("work/grass.svg", "w") as f:
-    f.write(svg)
+    f.write(str(svg))
 
 drawing = svg2rlg("work/grass.svg")
 renderPM.drawToFile(drawing, "work/grass.png", fmt="PNG")

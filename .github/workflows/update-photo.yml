@@ -1,6 +1,11 @@
 name: Python application
 
-on: [push]
+on:
+  push:
+    branches:
+      - master
+  schedule:
+      - cron:  '15 0 * * *'
 
 jobs:
   build:
@@ -25,3 +30,7 @@ jobs:
       with:
           name: grass
           path: work/grass.png
+    - name: Upload an image to Google Photos
+      run: |
+        python upload-photo.py -c --refresh-token ${{ secrets.GOOGLE_API_REFRESH_TOKEN }} --client-id ${{ secrets.GOOGLE_API_CLIENT_ID }} --client-secret ${{ secrets.GOOGLE_API_CLIENT_SECRET }}
+    
